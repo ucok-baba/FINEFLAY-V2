@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINEFLAY V3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Teko:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: linear-gradient(45deg, #000428, #004e92, #000428);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .matrix-column {
+            position: absolute;
+            top: -100px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            color: #0f0;
+            animation: matrixFall linear infinite;
+            text-shadow: 0 0 5px #0f0;
+        }
+        
+        @keyframes matrixFall {
+            to { transform: translateY(calc(100vh + 100px)); }
+        }
+        
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ffff;
+            animation: particleFloat 20s infinite linear;
+        }
+        
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) translateX(0) scale(0); opacity: 0; }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(100px) scale(0); opacity: 0; }
+        }
+        
+        .circuit-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: 0;
+            pointer-events: none;
+            background-image: linear-gradient(90deg, #00ffff 1px, transparent 1px), linear-gradient(0deg, #00ffff 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: circuitMove 10s linear infinite;
+        }
+        
+        @keyframes circuitMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background: linear-gradient(145deg, rgba(10, 10, 30, 0.95), rgba(5, 5, 20, 0.95));
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 255, 255, 0.3), 0 0 100px rgba(0, 255, 255, 0.1), 0 20px 60px rgba(0, 0, 0, 0.8), inset 0 0 30px rgba(0, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            position: relative;
+            z-index: 1;
+            animation: containerGlow 3s ease-in-out infinite alternate;
+            border: 2px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        @keyframes containerGlow {
+            0% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), 0 0 60px rgba(0, 255, 255, 0.1); }
+            100% { box-shadow: 0 0 50px rgba(0, 255, 255, 0.5), 0 0 100px rgba(0, 255, 255, 0.2); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, rgba(20, 20, 50, 0.9), rgba(10, 10, 30, 0.9));
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            animation: headerScan 4s linear infinite;
+        }
+        
+        @keyframes headerScan {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .logo {
+            font-size: 40px;
+            margin-bottom: 15px;
+            animation: logoPulse 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8));
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+        }
+        
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 20px rgba(0, 255, 255, 0.8)); }
+            50% { transform: scale(1.1) rotate(5deg); filter: drop-shadow(0 0 30px rgba(0, 255, 255, 1)); }
+        }
+        
+        .title {
+            font-family: 'Orbitron', monospace;
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGradient 3s ease infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 40px rgba(0, 255, 255, 0.5);
+        }
+        
+        @keyframes titleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .subtitle {
+            font-family: 'Teko', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            color: #00ffff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .phone-container {
+            margin: 20px;
+            position: relative;
+        }
+        
+        .phone-number {
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(20, 20, 50, 0.8), rgba(10, 10, 30, 0.8));
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-family: 'Orbitron', monospace;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .phone-number:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 25px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            border-color: rgba(0, 255, 255, 0.6);
+            background: linear-gradient(135deg, rgba(30, 30, 60, 0.9), rgba(15, 15, 40, 0.9));
+        }
+        
+        .phone-number.editing {
+            border-color: #00ffff;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.2);
+            animation: phoneGlow 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes phoneGlow {
+            0% { box-shadow: 0 0 30px rgba(0, 255, 255, 0.6), inset 0 0 30px rgba(0, 255, 255, 0.2); }
+            100% { box-shadow: 0 0 40px rgba(0, 255, 255, 0.8), inset 0 0 40px rgba(0, 255, 255, 0.3); }
+        }
+        
+        .phone-number.invalid {
+            border-color: #ff0066;
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.6), inset 0 0 30px rgba(255, 0, 102, 0.2);
+            animation: shake 0.3s;
+        }
+        
+        .phone-input {
+            background: transparent;
+            border: none;
+            color: #00ffff;
+            font-size: 18px;
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            outline: none;
+            width: 100%;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+        }
+        
+        .phone-input::placeholder {
+            color: rgba(0, 255, 255, 0.4);
+        }
+        
+        .edit-hint {
+            position: absolute;
+            top: -12px;
+            right: 15px;
+            background: linear-gradient(135deg, #00ffff, #0099cc);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+        
+        .phone-container:hover .edit-hint {
+            opacity: 1;
+        }
+        
+        .validation-message {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 11px;
+            color: #ff0066;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255, 0, 102, 0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .validation-message.show {
+            opacity: 1;
+        }
+        
+        .edit-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: #00ffff;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+        
+        .edit-btn:hover {
+            color: #ffffff;
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+        }
+        
+        .content {
+            padding: 25px 20px;
+        }
+        
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            padding: 18px 15px;
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Teko', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, rgba(20, 20, 50, 0.8), rgba(10, 10, 30, 0.8));
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.05);
+            min-height: 80px;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+        
+        .btn i {
+            font-size: 28px;
+            animation: iconFloat 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5));
+        }
+        
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+        }
+        
+        .btn-primary {
+            color: #00ffff;
+            border-color: rgba(0, 255, 255, 0.4);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(0, 255, 255, 0.2), rgba(0, 150, 200, 0.2));
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.4), inset 0 0 30px rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+            color: #ffffff;
+        }
+        
+        .btn-secondary {
+            color: #ff00ff;
+            border-color: rgba(255, 0, 255, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.2), rgba(200, 0, 200, 0.2));
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.4), inset 0 0 30px rgba(255, 0, 255, 0.1);
+            border-color: #ff00ff;
+            color: #ffffff;
+        }
+        
+        .btn-blue {
+            background: linear-gradient(135deg, #0099ff, #0066cc);
+            color: #ffffff;
+            width: 100%;
+            margin-bottom: 25px;
+            border: none;
+            font-size: 16px;
+            font-family: 'Orbitron', monospace;
+            letter-spacing: 2px;
+            box-shadow: 0 10px 30px rgba(0, 153, 255, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.1);
+            padding: 18px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 60px;
+        }
+        
+        .btn-blue:hover {
+            background: linear-gradient(135deg, #00ccff, #0099ff);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 153, 255, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 25px;
+            background: linear-gradient(135deg, rgba(20, 20, 50, 0.9), rgba(10, 10, 30, 0.9));
+            border-top: 2px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .footer-btn {
+            background: none;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            color: #00ffff;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Teko', sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .footer-btn:hover {
+            color: #ffffff;
+            background: rgba(0, 255, 255, 0.1);
+            border-color: #00ffff;
+            transform: translateX(-3px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, rgba(20, 20, 50, 0.95), rgba(10, 10, 30, 0.95));
+            color: #00ffff;
+            padding: 18px 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 255, 0.3);
+            transform: translateX(500px);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000;
+            border-left: 4px solid #00ffff;
+            backdrop-filter: blur(15px);
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            letter-spacing: 1px;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+        
+        .notification.error {
+            border-left-color: #ff0066;
+            background: linear-gradient(135deg, rgba(50, 20, 30, 0.95), rgba(30, 10, 20, 0.95));
+            color: #ff0066;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 0, 102, 0.3);
+        }
+        
+        .notification.success {
+            border-left-color: #00ff88;
+            background: linear-gradient(135deg, rgba(20, 50, 30, 0.95), rgba(10, 30, 20, 0.95));
+            color: #00ff88;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 255, 136, 0.3);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        
+        .loading-spinner {
+            width: 70px;
+            height: 70px;
+            border: 4px solid rgba(0, 255, 255, 0.2);
+            border-top: 4px solid #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+        
+        .glitch {
+            position: relative;
+            animation: glitch 2s infinite;
+        }
+        
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .glitch::before {
+            animation: glitch-1 0.5s infinite;
+            color: #00ffff;
+            z-index: -1;
+        }
+        
+        .glitch::after {
+            animation: glitch-2 0.5s infinite;
+            color: #ff00ff;
+            z-index: -2;
+        }
+        
+        @keyframes glitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+        }
+        
+        @keyframes glitch-1 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(20% 0 30% 0); transform: translate(-2px); }
+            40% { clip-path: inset(50% 0 20% 0); transform: translate(2px); }
+            60% { clip-path: inset(10% 0 60% 0); transform: translate(-1px); }
+            80% { clip-path: inset(80% 0 5% 0); transform: translate(1px); }
+        }
+        
+        @keyframes glitch-2 {
+            0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px); }
+            40% { clip-path: inset(20% 0 50% 0); transform: translate(-2px); }
+          60% { clip-path:  inset(30% 0 40% 0); transform: translate(1px); }
+          80% { clip-path:  inset(5% 0 80% 0); transform: translate(-1px); }
+                }
+        
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .container { max-width: 100%; border-radius: 20px; }
+            .header { padding: 25px 15px; }
+            .logo { font-size: 35px; margin-bottom: 12px; }
+            .title { font-size: 24px; letter-spacing: 1px; }
+            .subtitle { font-size: 14px; letter-spacing: 2px; }
+            .phone-container { margin: 15px; }
+            .phone-number { font-size: 16px; padding: 12px; letter-spacing: 0.5px; }
+            .phone-input { font-size: 16px; }
+            .content { padding: 20px 15px; }
+            .btn { font-size: 13px; padding: 15px 12px; letter-spacing: 0.5px; min-height: 70px; }
+            .btn i { font-size: 24px; }
+            .btn-blue { font-size: 14px; letter-spacing: 1px; padding: 15px 12px; min-height: 55px; }
+            .footer { padding: 15px 20px; }
+            .footer-btn { font-size: 13px; padding: 6px 12px; gap: 6px; }
+            .notification { top: 20px; right: 20px; left: 20px; padding: 15px 20px; font-size: 14px; }
+            .loading-spinner  { width: 60px; height: 60px; }
+                  }
+        
+        @media (max-width: 360px) {
+            .title { font-size: 20px; }
+            .btn { font-size: 12px; padding: 12px 10px; }
+            .btn-blue { font-size: 13px; padding: 12px 10px; }
+            .phone-number { font-size: 14px; padding: 10px; }
+            .phone-input { font-size: 14px; }
+        }
+    </style>
+</head><body>
+    <div class="bg-animation"></div>
+    <div class="matrix-rain" id="matrixRain"></div>
+    <div class="circuit-pattern"></div>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-spider"></i>
+            </div>
+            <div class="title glitch" data-text="FINEFLAY V3">FINEFLAY V3</div>
+            <div class="subtitle">Digital Tools Platform</div>
+        </div>
+        
+        <div class="phone-container">
+            <div class="phone-number" id="phoneDisplay" onclick="enableEdit()">
+                <i class="fas fa-phone"></i>
+                <span id="phoneText">+62 848-4885-181</span>
+                <button class="edit-btn" onclick="event.stopPropagation(); enableEdit()">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="edit-hint">Klik untuk edit (hanya angka)</div>
+            <input type="text" 
+                   class="phone-input" 
+                   id="phoneInput" 
+                   style="display: none;" 
+                   placeholder="Masukkan nomor telepon..."
+                   pattern="[+0-9\s\-\(\)]+"
+                   maxlength="20"
+                   onblur="savePhone()" 
+                   onkeypress="handlePhoneKeyPress(event)"
+                   oninput="validatePhoneInput(this)">
+            <div class="validation-message" id="validationMessage">Hanya angka dan karakter + - ( ) yang diperbolehkan</div>
+        </div>
+        
+        <div class="content">
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="handleCrash('android')">
+                    <i class="fab fa-android"></i>
+                    <span>CRAH INFINITY DELAY HARD YTTA KEZXO MENU</span>
+                </button>
+                <button class="btn btn-secondary" onclick="handleCrash('iphone')">
+                    <i class="fab fa-apple"></i>
+                    <span>CRAH INFINITY DELAY HARD YTTA KEZXO MENU</span>
+                </button>
+            </div>
+            
+            <button class="btn btn-blue" onclick="sendBug()">
+                <i class="fas fa-bug"></i> KIRIM BUG
+            </button>
+        </div>
+        
+        <div class="footer">
+            <button class="footer-btn" onclick="showNotification('Halaman Developer')">
+                <i class="fas fa-code"></i> Developer
+            </button>
+            <button class="footer-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>    <script>
+        function createMatrixRain() {
+            const matrixRain = document.getElementById('matrixRain');
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const column = document.createElement('div');
+                column.className = 'matrix-column';
+                column.style.left = i * 20 + 'px';
+                column.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                column.style.animationDelay = Math.random() * 5 + 's';
+                
+                let text = '';
+                for (let j = 0; j < 30; j++) {
+                    text += Math.random() > 0.5 ? '1' : '0';
+                    text += '<br>';
+                }
+                column.innerHTML = text;
+                matrixRain.appendChild(column);
+            }
+        }
+        
+        window.onload = function() {
+            const savedPhone = localStorage.getItem('phoneNumber');
+            if (savedPhone) {
+                document.getElementById('phoneText').textContent = savedPhone;
+                document.getElementById('phoneInput').value = savedPhone;
+            }
+            createParticles();
+            createMatrixRain();
+        };
+        
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 100; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (20 + Math.random() * 10) + 's';
+                
+                const colors = ['#00ffff', '#ff00ff', '#00ff88', '#ff0066'];
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.boxShadow = `0 0 10px ${particle.style.background}`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        function showNotification(message, type = 'default', duration = 3000) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = 'notification show';
+            
+            if (type === 'error') {
+                notification.classList.add('error');
+            } else if (type === 'success') {
+                notification.classList.add('success');
+            }
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.className = 'notification';
+                }, 500);
+            }, duration);
+        }
+        
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+        
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+        
+        function validatePhoneInput(input) {
+            const phoneContainer = document.querySelector('.phone-container');
+            const phoneDisplay = phoneContainer.querySelector('.phone-number');
+            const validationMessage = document.getElementById('validationMessage');
+            
+            let value = input.value;
+            let cleanedValue = value.replace(/[^0-9+\-\(\)\s]/g, '');
+            
+            if (value !== cleanedValue) {
+                phoneDisplay.classList.add('invalid');
+                validationMessage.classList.add('show');
+                
+                phoneDisplay.style.animation = 'shake 0.3s';
+                setTimeout(() => {
+                    phoneDisplay.style.animation = '';
+                }, 300);
+                
+                input.value = cleanedValue;
+                
+                setTimeout(() => {
+                    validationMessage.classList.remove('show');
+                    phoneDisplay.classList.remove('invalid');
+                }, 2000);
+            } else {
+                phoneDisplay.classList.remove('invalid');
+                validationMessage.classList.remove('show');
+            }
+        }
+        
+        function enableEdit() {
+            const phoneDisplay = document.getElementById('phoneDisplay');
+            const phoneInput = document.getElementById('phoneInput');
+            const phoneText = document.getElementById('phoneText');
+            
+            phoneDisplay.style.display = 'none';
+            phoneInput.style.display = 'block';
+            phoneInput.value = phoneText.textContent;
+            phoneInput.focus();
+            phoneInput.select();
+            
+            phoneDisplay.parentElement.querySelector('.phone-number').classList.add('editing');
+        }
+        
+        function savePhone() {
+            const phoneDisplay = document.getElementById('phoneDisplay');
+            const phoneInput = document.getElementById('phoneInput');
+            const phoneText = document.getElementById('phoneText');
+            const newPhone = phoneInput.value.trim();
+            
+            const digitCount = (newPhone.match(/\d/g) || []).length;
+            
+            if (newPhone && digitCount >= 5) {
+                phoneText.textContent = newPhone;
+                localStorage.setItem('phoneNumber', newPhone);
+                showNotification('Nomor telepon berhasil diperbarui!', 'success');
+            } else if (newPhone && digitCount < 5) {
+                showNotification('Nomor telepon harus memiliki minimal 5 digit!', 'error');
+                phoneDisplay.style.display = 'flex';
+                phoneInput.style.display = 'none';
+                phoneDisplay.parentElement.querySelector('.phone-number').classList.remove('editing');
+                return;
+            }
+            
+            phoneDisplay.style.display = 'flex';
+            phoneInput.style.display = 'none';
+            
+            phoneDisplay.parentElement.querySelector('.phone-number').classList.remove('editing');
+        }
+        
+        function handlePhoneKeyPress(event) {
+            const allowedKeys = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 
+                               '+', '-', '(', ')', ' ', 'Backspace', 'Delete', 
+                               'Tab', 'Escape', 'Enter', 'ArrowLeft', 'ArrowRight', 
+                               'Home', 'End'];
+            
+            if (!allowedKeys.includes(event.key) && !event.ctrlKey && !event.metaKey) {
+                event.preventDefault();
+                
+                showNotification('Hanya angka dan karakter + - ( ) yang diperbolehkan!', 'error', 2000);
+                
+                const phoneDisplay = document.querySelector('.phone-number');
+                phoneDisplay.classList.add('invalid');
+                phoneDisplay.style.animation = 'shake 0.3s';
+                setTimeout(() => {
+                    phoneDisplay.style.animation = '';
+                    phoneDisplay.classList.remove('invalid');
+                }, 300);
+            }
+            
+            if (event.key === 'Enter') {
+                savePhone();
+            }
+        }
+        
+        function handleCrash(type) {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const deviceType = type === 'android' ? 'Android' : 'iPhone';
+                showNotification(`Crash ${deviceType} Infinity Delay Hard YTTA KEZXO Menu activated!`, 'default', 4000);
+                
+                document.body.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 500);
+            }, 1500);
+        }
+        
+        function sendBug() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                const phoneNumber = document.getElementById('phoneText').textContent;
+                showNotification(`Bug report sent to ${phoneNumber}!`, 'success', 4000);
+                
+                const btn = event.target;
+                btn.style.background = 'linear-gradient(135deg, #00ff88, #00cc66)';
+                setTimeout(() => {
+                    btn.style.background = '';
+                }, 1000);
+            }, 1000);
+        }
+        
+        function logout() {
+            showLoading();
+            setTimeout(() => {
+                hideLoading();
+                showNotification('Logging out...', 'default', 2000);
+                setTimeout(() => {
+                    showNotification('You have been logged out successfully!', 'success');
+                }, 2000);
+            }, 1000);
+        }
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const phoneInput = document.getElementById('phoneInput');
+                if (phoneInput.style.display === 'block') {
+                    const phoneDisplay = document.getElementById('phoneDisplay');
+                    phoneDisplay.style.display = 'flex';
+                    phoneInput.style.display = 'none';
+                    phoneDisplay.parentElement.querySelector('.phone-number').classList.remove('editing');
+                    document.getElementById('validationMessage').classList.remove('show');
+                } else {
+                    hideLoading();
+                }
+            }
+        });
+        
+        document.getElementById('phoneInput').addEventListener('paste', function(e) {
+            e.preventDefault();
+            const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+            const cleanedData = pastedData.replace(/[^0-9+\-\(\)\s]/g, '');
+            document.execCommand('insertText', false, cleanedData);
+            
+            if (pastedData !== cleanedData) {
+                showNotification('Beberapa karakter tidak valid telah dihapus!', 'error', 2000);
+            }
+        });
+    </script>
+</body>
+</html>
